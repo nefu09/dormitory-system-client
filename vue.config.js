@@ -2,12 +2,12 @@ module.exports = {
   // 开发环境配置
   devServer: {
     // 默认端口
-    port: 8081,
+    port: 8080,
     // 设置代理
     proxy: {
       "/": {
         // 目标 API 地址
-        target: "http://localhost:8080",
+        target: "http://localhost:8081",
         // 将请求头的Host更改为target URL
         changeOrigin: true,
       },
