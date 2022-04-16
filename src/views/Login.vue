@@ -13,8 +13,8 @@
           "
         />
         <div style="position: absolute; left: 150px; top: 100px">
-          <h1 style="color: black">welcome</h1>
-          <h1 style="color: black">宿舍应用系统</h1>
+          <h1 style="color: black; font-weight: 900">welcome</h1>
+          <h1 style="color: black; font-weight: 900">宿舍应用系统</h1>
         </div>
       </div>
       <div id="right">
@@ -40,6 +40,7 @@
               left: 148px;
               display: inline-block;
             "
+            v-model="login01.userName"
             placeholder="请输入用户名"
           />
         </div>
@@ -65,6 +66,7 @@
               left: 148px;
               display: inline-block;
             "
+            v-model="login01.password"
             placeholder="请输入密码"
           />
         </div>
@@ -92,70 +94,53 @@
 import { defineComponent, ref } from "vue";
 import axios from "@/axios/index";
 import { useRouter } from "vue-router";
-import { Admin, Student } from "@/datasource/Types";
+import { Login, Student, Admin } from "@/datasource/Types";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const admin: Admin = {
-      adminNumber: "admin",
-      password: "123",
-    };
-    const admin01 = ref(admin);
-    const student: Student = {
-      studentNumber: "2018214215",
+    const login: Login = {
+      userName: "2018214215",
       password: "2018214215",
     };
-    const student01 = ref(student);
-    function submitadminlogin() {
-      axios.post("/admin/login", admin01.value).then((resp) => {
-        if (resp) {
-          if (resp.data.code == 200) {
-            const token = resp.data.data.token;
-            sessionStorage.setItem("token", token);
-            console.log("进来了");
-            router.replace(`/layout`);
-          } else {
-            router.replace(`/`);
-          }
-        }
-      });
-    }
-    function submituserlogin() {
-      axios.post("/user/login", student01.value).then((resp) => {
-        if (resp) {
-          if (resp.data.code == 200) {
-            const studentNumber = student01.value.studentNumber;
-            if (typeof studentNumber == "string") {
-              sessionStorage.setItem("studentNumber", studentNumber);
-            }
-            const token = resp.data.data.token;
-            sessionStorage.setItem("token", token);
-            console.log("进来了");
-            router.replace(`/userlayout`);
-          } else {
-            router.replace(`/`);
-          }
-        }
-      });
-    }
+    const login01 = ref(login);
+    // const student: Student = {};
+    // const admin: Admin = {};
+    // const student01 = ref(student);
+    // const admin01 = ref(admin);
     function userlogin() {
-      // const obj2 = document.getElementById("form02");
-      // if (obj2 != null) {
-      //   obj2.style.display = "none";
-      // }
-      // const obj1 = document.getElementById("form01");
-      // if (obj1 != null) {
-      //   obj1.style.display = "block";
-      // }
-      alert("ddd");
+      axios.post("/login", login01.value).then((resp) => {
+        if (resp) {
+          if (resp.data.code == 200) {
+            const token = resp.data.data.token;
+            sessionStorage.setItem("token", token);
+            const isStudent = resp.data.data.isStudent;
+            if (isStudent == true) {
+              router.replace(`/student`);
+              const studentInfo = resp.data.data.studentInfo;
+              sessionStorage.setItem(
+                "studentInfo",
+                JSON.stringify(studentInfo)
+              );
+              sessionStorage.setItem("isStudent", "true");
+            } else {
+              router.replace(`/admin`);
+              const adminInfo = resp.data.data.adminInfo;
+              sessionStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+              sessionStorage.setItem("isStudent", "false");
+            }
+          } else {
+            router.replace(`/`);
+            alert("账号或密码错误");
+          }
+        }else{
+          router.replace(`/`);
+        }
+      });
     }
 
     return {
-      submitadminlogin,
-      submituserlogin,
-      admin01,
-      student01,
+      login01,
       userlogin,
     };
   },
@@ -189,7 +174,6 @@ export default defineComponent({
   width: 500px;
   height: inherit;
   display: inline-block;
-  border: solid darkgray;
 }
 #user {
   position: absolute;

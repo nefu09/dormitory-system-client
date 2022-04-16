@@ -5,14 +5,20 @@ export interface ResultVO {
   data?: object;
 }
 
+export interface Login {
+  userName?: string;
+  password?: string;
+}
+
 export interface Student {
   studentNumber?: string;
   name?: string;
-  password?: string;
+  dormitoryBuilding?: string;
+  dormitoryNumber?: number;
 }
 
 export interface Admin {
   adminNumber?: string;
   name?: string;
-  password?: string;
+  dormitoryBuilding?: string;
 }
