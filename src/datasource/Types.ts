@@ -22,3 +22,13 @@ export interface Admin {
   name?: string;
   dormitoryBuilding?: string;
 }
+
+export interface Goods {
+  id?: number;
+  name?: string;
+  price?: number;
+  ownerNumber?: string;
+  description?: string;
+  url?: string;
+  state?: string;
+}

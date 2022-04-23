@@ -8,26 +8,29 @@
           </div>
           <div>
             <span>群&nbsp;&nbsp;&nbsp;聊</span>
-            <i
+            <el-icon
               class="el-icon-chat-dot-round"
               style="margin-left: 10px; font-size: 16px; cursor: pointer"
               @click="toChat()"
-            ></i>
+              ><chat-dot-round
+            /></el-icon>
+
             <span style="font-size: 12px; color: limegreen; margin-left: 5px"
               >chatting...</span
             >
           </div>
           <div
-            style="padding: 10px 0"
+            style="padding: 8px 0"
             v-for="student in allStudents01"
             :key="student.name"
           >
             <span>{{ student.name }}</span>
-            <i
+            <el-icon
               class="el-icon-chat-dot-round"
               style="margin-left: 10px; font-size: 16px; cursor: pointer"
               @click="toSingleChat(student)"
-            ></i>
+              ><chat-dot-round
+            /></el-icon>
             <span style="font-size: 12px; color: limegreen; margin-left: 5px"
               >chatting...</span
             >

@@ -15,11 +15,12 @@
           >
             <div>
               <span>{{ student.name }}</span>
-              <i
+              <el-icon
                 class="el-icon-chat-dot-round"
                 style="margin-left: 10px; font-size: 16px; cursor: pointer"
                 @click="toSingleChat(student)"
-              ></i>
+                ><chat-dot-round
+              /></el-icon>
               <span style="font-size: 12px; color: limegreen; margin-left: 5px"
                 >chatting...</span
               >
@@ -195,7 +196,7 @@ export default defineComponent({
           "  </div>\n" +
           '  <div class="el-col el-col-2">\n' +
           '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
-          '    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" style="object-fit: cover;">\n' +
+          '    <img src="https://nljbucket.oss-cn-beijing.aliyuncs.com/test.png?Expires=1650356266&OSSAccessKeyId=TMP.3KeEDrJNfd7KaihgEAUxiwTBLrvQn3jEbNS5XHMYvQMkPMVKL8VEYHPkeMdJS5NpZnZHhhAewaHz3Ne8PRMjqdVVtkppWJ&Signature=%2Fi39Wjh35Sz%2BYm4eZ1EWjfPiFY8%3D" style="object-fit: cover;">\n' +
           "  </span>\n" +
           "  </div>\n" +
           "</div>";

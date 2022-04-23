@@ -2,11 +2,15 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import ElementPlus from "element-plus";
-import "element-plus/lib/theme-chalk/index.css";
+import "element-plus/dist/index.css";
+import * as ElIconModules from "@element-plus/icons-vue";
 import Vue from "./App.vue";
-import * as echarts from "echarts";
+import { ref } from "vue";
 const app = createApp(App);
-app.config.globalProperties.$echarts = echarts;
+Object.keys(ElIconModules).forEach(function (key) {
+    app.component(ElIconModules[key].name, ElIconModules[key])
+});
+
 app.use(router);
 app.use(ElementPlus);
 app.mount("#app");

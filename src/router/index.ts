@@ -4,6 +4,7 @@ import Chat from "../views/Chat.vue";
 import Student from "../views/Student.vue";
 import SingleChat from "../views/SingleChat.vue";
 import SecondHand from "../views/SecondHand.vue";
+import MySecondHand from "../views/MySecondHand.vue";
 import Reward from "../views/Reward.vue";
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,17 +30,22 @@ const routes: Array<RouteRecordRaw> = [
         name: "singleChat",
         component: SingleChat,
       },
+      {
+        path: "/secondHand",
+        name: "secondHand",
+        component: SecondHand,
+      },
+      {
+        path: "/mySecondHand",
+        name: "mySecondHand",
+        component: MySecondHand,
+      },
+      {
+        path: "/reward",
+        name: "reward",
+        component: Reward,
+      },
     ],
-  },
-  {
-    path: "/secondHand",
-    name: "secondHand",
-    component: SecondHand,
-  },
-  {
-    path: "/reward",
-    name: "reward",
-    component: Reward,
   },
 ];
 
