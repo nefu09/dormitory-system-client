@@ -5,7 +5,11 @@ import Student from "../views/Student.vue";
 import SingleChat from "../views/SingleChat.vue";
 import SecondHand from "../views/SecondHand.vue";
 import MySecondHand from "../views/MySecondHand.vue";
-import Reward from "../views/Reward.vue";
+import NeedReward from "../views/NeedReward.vue";
+import HelpReward from "../views/HelpReward.vue";
+import MyNeedReward from "../views/MyNeedReward.vue";
+import MyHelpReward from "../views/MyHelpReward.vue";
+import SelfInfo from "../views/SelfInfo.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -41,9 +45,29 @@ const routes: Array<RouteRecordRaw> = [
         component: MySecondHand,
       },
       {
-        path: "/reward",
-        name: "reward",
-        component: Reward,
+        path: "/needReward",
+        name: "needReward",
+        component: NeedReward,
+      },
+      {
+        path: "/helpReward",
+        name: "helpReward",
+        component: HelpReward,
+      },
+      {
+        path: "/myNeedReward",
+        name: "myNeedReward",
+        component: MyNeedReward,
+      },
+      {
+        path: "/myHelpReward",
+        name: "myHelpReward",
+        component: MyHelpReward,
+      },
+      {
+        path: "/selfInfo",
+        name: "selfInfo",
+        component: SelfInfo,
       },
     ],
   },

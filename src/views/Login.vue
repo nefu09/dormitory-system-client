@@ -116,7 +116,7 @@ export default defineComponent({
             sessionStorage.setItem("token", token);
             const isStudent = resp.data.data.isStudent;
             if (isStudent == true) {
-              router.replace(`/student`);
+              router.replace(`/chat`);
               const studentInfo = resp.data.data.studentInfo;
               sessionStorage.setItem(
                 "studentInfo",

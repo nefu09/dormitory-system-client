@@ -315,7 +315,13 @@ export default defineComponent({
 
     function ToEditGoods(Goods: Goods) {
       isEdit.value = true;
-      EditGooods01.value = Goods;
+      EditGooods01.value.id = Goods.id;
+      EditGooods01.value.name = Goods.name;
+      EditGooods01.value.price = Goods.price;
+      EditGooods01.value.ownerNumber = Goods.ownerNumber;
+      EditGooods01.value.description = Goods.description;
+      EditGooods01.value.url = Goods.url;
+      EditGooods01.value.state = Goods.state;
     }
     function AddGoods() {
       addForm.value.validateField("price", (errorMessage) => {
@@ -328,7 +334,6 @@ export default defineComponent({
           ElMessage.error("物品名称不能为空");
         }
       });
-      changePicture;
       addForm.value.validate((valid) => {
         if (valid == true) {
           var param = new FormData();

@@ -14,12 +14,17 @@
         <el-menu-item index="/secondHand">随便逛逛</el-menu-item>
         <el-menu-item index="/mySecondHand">我的发布</el-menu-item>
       </el-sub-menu>
-   
-
       <el-sub-menu index="/reward">
         <template #title>公寓悬赏</template>
-     </el-sub-menu>
+        <el-menu-item index="/needReward">求助帖</el-menu-item>
+        <el-menu-item index="/helpReward">帮忙帖</el-menu-item>
+        <el-menu-item index="/myNeedReward">我的悬赏</el-menu-item>
+      </el-sub-menu>
+      <el-menu-item index="/selfInfo">
+        <template #title>个人信息</template>
+      </el-menu-item>
     </el-menu>
+
     <!-- 
     <el-scrollbar>
       <el-menu :default-openeds="['1', '3']">
