@@ -10,6 +10,8 @@ import HelpReward from "../views/HelpReward.vue";
 import MyNeedReward from "../views/MyNeedReward.vue";
 import MyHelpReward from "../views/MyHelpReward.vue";
 import SelfInfo from "../views/SelfInfo.vue";
+import LateBack from "../views/LateBack.vue";
+import Repair from "../views/Repair.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -68,6 +70,16 @@ const routes: Array<RouteRecordRaw> = [
         path: "/selfInfo",
         name: "selfInfo",
         component: SelfInfo,
+      },
+      {
+        path: "/lateBack",
+        name: "lateBack",
+        component: LateBack,
+      },
+      {
+        path: "/repair",
+        name: "repair",
+        component: Repair,
       },
     ],
   },

@@ -20,6 +20,12 @@
         <el-menu-item index="/helpReward">帮忙帖</el-menu-item>
         <el-menu-item index="/myNeedReward">我的悬赏</el-menu-item>
       </el-sub-menu>
+      <el-menu-item index="/lateBack">
+        <template #title>晚归申请</template>
+      </el-menu-item>
+      <el-menu-item index="/repair">
+        <template #title>保修管理</template>
+      </el-menu-item>
       <el-menu-item index="/selfInfo">
         <template #title>个人信息</template>
       </el-menu-item>

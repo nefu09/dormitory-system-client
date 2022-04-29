@@ -138,7 +138,7 @@ export default defineComponent({
     axios
       .post(`/getApartmentHelpRewards/${student.studentNumber}`)
       .then((resp) => {
-        if (resp && resp.status == 200) {
+        if (resp && resp.data.code == 200) {
           if (resp.data.data.rewards != null) {
             helpRewards01.value = resp.data.data.rewards;
           }
@@ -146,7 +146,7 @@ export default defineComponent({
       });
     function toSingleChat(number: string) {
       axios.get(`/student/getOneStudentByNumber/${number}`).then((resp) => {
-        if (resp && resp.status == 200) {
+        if (resp && resp.data.code == 200) {
           if (resp.data.data.student != null) {
             router.replace(
               `/singleChat/${resp.data.data.student.studentNumber}/${resp.data.data.student.name}`

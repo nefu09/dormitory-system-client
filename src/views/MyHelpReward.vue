@@ -287,7 +287,7 @@ export default defineComponent({
     };
     var newReward01 = ref(newReward);
     axios.post(`/getSelfHelpRewards/${student.studentNumber}`).then((resp) => {
-      if (resp && resp.status == 200) {
+      if (resp && resp.data.code == 200) {
         if (resp.data.data.rewards != null) {
           myHelpRewards01.value = resp.data.data.rewards;
         }
@@ -310,11 +310,11 @@ export default defineComponent({
     }
     function deleteReward(reward: Reward) {
       axios.post(`/deleteReward/${reward.id}`).then((resp) => {
-        if (resp && resp.status == 200) {
+        if (resp && resp.data.code == 200) {
           axios
             .post(`/getSelfHelpRewards/${student.studentNumber}`)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.rewards != null) {
                   myHelpRewards01.value = resp.data.data.rewards;
                 }
@@ -356,11 +356,11 @@ export default defineComponent({
       editForm.value.validate((valid) => {
         if (valid == true) {
           axios.post(`/updateReward`, editReward01.value).then((resp) => {
-            if (resp && resp.status == 200) {
+            if (resp && resp.data.code == 200) {
               axios
                 .post(`/getSelfHelpRewards/${student.studentNumber}`)
                 .then((resp) => {
-                  if (resp && resp.status == 200) {
+                  if (resp && resp.data.code == 200) {
                     if (resp.data.data.rewards != null) {
                       myHelpRewards01.value = resp.data.data.rewards;
                     }
@@ -408,11 +408,11 @@ export default defineComponent({
       addForm.value.validate((valid) => {
         if (valid == true) {
           axios.post(`/addReward`, newReward01.value).then((resp) => {
-            if (resp && resp.status == 200) {
+            if (resp && resp.data.code == 200) {
               axios
                 .post(`/getSelfHelpRewards/${student.studentNumber}`)
                 .then((resp) => {
-                  if (resp && resp.status == 200) {
+                  if (resp && resp.data.code == 200) {
                     if (resp.data.data.rewards != null) {
                       myHelpRewards01.value = resp.data.data.rewards;
                     }

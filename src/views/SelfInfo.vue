@@ -568,7 +568,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -594,7 +594,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -620,7 +620,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -646,7 +646,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -675,7 +675,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -703,7 +703,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -733,7 +733,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, tstudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -784,7 +784,7 @@ export default defineComponent({
           axios
             .post(`/student/editStudentInfo`, editStudent01.value)
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",
@@ -831,7 +831,7 @@ export default defineComponent({
               param
             )
             .then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.student != null) {
                   sessionStorage.setItem(
                     "studentInfo",

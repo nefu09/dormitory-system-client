@@ -216,7 +216,7 @@ export default defineComponent({
     }
     //获取该公寓同学发布的闲置产品
     axios.post(`/getSelfGoods/${nowNumber}`).then((resp) => {
-      if (resp && resp.status == 200) {
+      if (resp && resp.data.code == 200) {
         if (resp.data.data.selfGoods != null) {
           selfGoods01.value = resp.data.data.selfGoods;
         }
@@ -247,14 +247,14 @@ export default defineComponent({
           param.append("file", changePicture.value);
           if (changePicture.value != null) {
             axios.post(`/editPicture`, param).then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.url != null) {
                   EditGooods01.value.url = resp.data.data.url;
                   axios.post(`/editGoods`, EditGooods01.value).then((resp) => {
-                    if (resp && resp.status == 200) {
+                    if (resp && resp.data.code == 200) {
                       //刷新该公寓同学发布的闲置产品
                       axios.post(`/getSelfGoods/${nowNumber}`).then((resp) => {
-                        if (resp && resp.status == 200) {
+                        if (resp && resp.data.code == 200) {
                           if (resp.data.data.selfGoods != null) {
                             selfGoods01.value = resp.data.data.selfGoods;
                           }
@@ -274,10 +274,10 @@ export default defineComponent({
             isEdit.value = false;
           } else {
             axios.post(`/editGoods`, EditGooods01.value).then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 //刷新该公寓同学发布的闲置产品
                 axios.post(`/getSelfGoods/${nowNumber}`).then((resp) => {
-                  if (resp && resp.status == 200) {
+                  if (resp && resp.data.code == 200) {
                     if (resp.data.data.selfGoods != null) {
                       selfGoods01.value = resp.data.data.selfGoods;
                     }
@@ -340,7 +340,7 @@ export default defineComponent({
           param.append("file", picture.value);
           if (picture.value != null) {
             axios.post(`/uploadPicture`, param).then((resp) => {
-              if (resp && resp.status == 200) {
+              if (resp && resp.data.code == 200) {
                 if (resp.data.data.url != null) {
                   UploadGooods01.value.url = resp.data.data.url;
                   UploadGooods01.value.state = "已发布";
@@ -348,12 +348,12 @@ export default defineComponent({
                   axios
                     .post(`/uploadGoods`, UploadGooods01.value)
                     .then((resp) => {
-                      if (resp && resp.status == 200) {
+                      if (resp && resp.data.code== 200) {
                         //刷新该公寓同学发布的闲置产品
                         axios
                           .post(`/getSelfGoods/${nowNumber}`)
                           .then((resp) => {
-                            if (resp && resp.status == 200) {
+                            if (resp && resp.data.code == 200) {
                               if (resp.data.data.selfGoods != null) {
                                 selfGoods01.value = resp.data.data.selfGoods;
                               }
@@ -379,10 +379,10 @@ export default defineComponent({
     }
     function deleteGoods(id: string) {
       axios.post(`/deleteGoods/${id}`).then((resp) => {
-        if (resp && resp.status == 200) {
+        if (resp && resp.data.code == 200) {
           //刷新该公寓同学发布的闲置产品
           axios.post(`/getSelfGoods/${nowNumber}`).then((resp) => {
-            if (resp && resp.status == 200) {
+            if (resp && resp.data.code == 200) {
               if (resp.data.data.selfGoods != null) {
                 selfGoods01.value = resp.data.data.selfGoods;
               }

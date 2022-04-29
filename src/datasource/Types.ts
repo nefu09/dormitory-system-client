@@ -51,3 +51,35 @@ export interface Reward {
   //帮忙为0，求帮为1
   kind?: number;
 }
+
+export interface Password {
+  originPassword?: string;
+  newPassword?: string;
+  againPassword?: string;
+}
+
+export interface LateBack {
+  id?: number;
+  applyTime?: Date;
+  backTime?: Date;
+  studentNumber?: string;
+  //0为已申请,1为已通过,2为未通过
+  state?: number;
+  //晚归原因
+  reason?: string;
+  //联系电话
+  phone?: string;
+}
+
+export interface Repair {
+  id?: number;
+  name?: string;
+  description?: string;
+  //申报人学号
+  studentNumber?: string;
+  //dormitoryNumber
+  dormitoryNumber?: string;
+  //已报为0，已接收为1，已完成为2
+  state?: number;
+  date?: Date;
+}

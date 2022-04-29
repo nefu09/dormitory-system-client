@@ -87,7 +87,7 @@ export default defineComponent({
     }
     //获取该公寓同学发布的闲置产品
     axios.post(`/getApartmentGoods/${nowNumber}`).then((resp) => {
-      if (resp && resp.status == 200) {
+      if (resp && resp.data.code == 200) {
         if (resp.data.data.apartmentGoods != null) {
           apartmentGoods01.value = resp.data.data.apartmentGoods;
         }
@@ -103,7 +103,7 @@ export default defineComponent({
     }
     function toSingleChat(number: string) {
       axios.get(`/student/getOneStudentByNumber/${number}`).then((resp) => {
-        if (resp && resp.status == 200) {
+        if (resp && resp.data.code == 200) {
           if (resp.data.data.student != null) {
             router.replace(
               `/singleChat/${resp.data.data.student.studentNumber}/${resp.data.data.student.name}`

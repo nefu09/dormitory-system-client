@@ -8,6 +8,17 @@
               >（点击聊天气泡开始聊天）</span
             >
           </div>
+          <span style="color: #177cb0">管理员</span>
+          <el-icon
+            class="el-icon-chat-dot-round"
+            style="margin-left: 10px; font-size: 16px; cursor: pointer"
+            @click="toAdminSingleChat()"
+            ><chat-dot-round
+          /></el-icon>
+          <span style="font-size: 12px; color: limegreen; margin-left: 5px"
+            >chatting...</span
+          >
+
           <div
             style="padding: 10px 0"
             v-for="student in allStudents01"
@@ -94,6 +105,7 @@ export default defineComponent({
     var student: Student = {};
     var nowNumber = "";
     var admin: Admin = {};
+    var admin01 = ref(admin);
     var nowUser: string;
     var apartment = "";
     var url = "";
@@ -102,7 +114,7 @@ export default defineComponent({
     var allStudents01 = ref(allStudents);
 
     const isStudent = sessionStorage.getItem("isStudent");
-    if (isStudent != null && isStudent == "true") {
+    if (isStudent != null) {
       var si = sessionStorage.getItem("studentInfo");
       if (si != null) {
         student = JSON.parse(si);
@@ -121,23 +133,24 @@ export default defineComponent({
           nowNumber = student.studentNumber;
         }
       }
-    } else if (isStudent != null && isStudent == "false") {
-      var ai = sessionStorage.getItem("adminInfo");
-      if (ai != null) {
-        admin = JSON.parse(ai);
-        url =
-          "ws://localhost:8081/chat/" + admin.adminNumber + "/" + admin.name;
-        if (admin.name != null) {
-          nowUser = admin.name;
-        }
-        if (admin.dormitoryBuilding != null) {
-          apartment = admin.dormitoryBuilding;
-        }
-        if (admin.adminNumber != null) {
-          nowNumber = admin.adminNumber;
-        }
-      }
     }
+    // } else if (isStudent != null && isStudent == "false") {
+    //   var ai = sessionStorage.getItem("adminInfo");
+    //   if (ai != null) {
+    //     admin = JSON.parse(ai);
+    //     url =
+    //       "ws://localhost:8081/chat/" + admin.adminNumber + "/" + admin.name;
+    //     if (admin.name != null) {
+    //       nowUser = admin.name;
+    //     }
+    //     if (admin.dormitoryBuilding != null) {
+    //       apartment = admin.dormitoryBuilding;
+    //     }
+    //     if (admin.adminNumber != null) {
+    //       nowNumber = admin.adminNumber;
+    //     }
+    //   }
+    // }
     axios.get(`/student/getOneApartmentStudents/${apartment}`).then((resp) => {
       if (resp) {
         if (resp.data.code == 200) {
@@ -146,6 +159,16 @@ export default defineComponent({
             allStudents01.value = allStudents01.value.filter(
               (s) => s.studentNumber != nowNumber
             );
+          }
+        }
+      }
+    });
+
+    axios.get(`/student/getApartmentAdmin/${apartment}`).then((resp) => {
+      if (resp) {
+        if (resp.data.code == 200) {
+          if (resp.data.data.admin != null) {
+            admin01.value = resp.data.data.admin;
           }
         }
       }
@@ -221,6 +244,11 @@ export default defineComponent({
     function toSingleChat(student: Student) {
       router.replace(`/singleChat/${student.studentNumber}/${student.name}`);
     }
+    function toAdminSingleChat() {
+      router.replace(
+        `/singleChat/${admin01.value.adminNumber}/${admin01.value.name}`
+      );
+    }
     return {
       send,
       text,
@@ -229,6 +257,8 @@ export default defineComponent({
       nowNumber,
       toSingleChat,
       apartment,
+      admin01,
+      toAdminSingleChat,
     };
   },
 });

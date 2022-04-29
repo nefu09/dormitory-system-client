@@ -95,6 +95,7 @@ import { defineComponent, ref } from "vue";
 import axios from "@/axios/index";
 import { useRouter } from "vue-router";
 import { Login, Student, Admin } from "@/datasource/Types";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   setup() {
@@ -131,7 +132,7 @@ export default defineComponent({
             }
           } else {
             router.replace(`/`);
-            alert("账号或密码错误");
+            ElMessage.error("账号或密码错误");
           }
         }else{
           router.replace(`/`);
