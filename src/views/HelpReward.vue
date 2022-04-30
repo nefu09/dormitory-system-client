@@ -13,7 +13,7 @@
           <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
               <template #title>
-                <span style="color:#549688">{{ item.title }}</span>
+                <span style="color: #549688">{{ item.title }}</span>
                 <img
                   src="../assets/unfinished.png"
                   alt=""

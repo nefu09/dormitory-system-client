@@ -78,8 +78,10 @@ export interface Repair {
   //申报人学号
   studentNumber?: string;
   //dormitoryNumber
-  dormitoryNumber?: string;
+  dormitoryNumber?: number;
   //已报为0，已接收为1，已完成为2
   state?: number;
   date?: Date;
+  //物品图片
+  url?: string;
 }

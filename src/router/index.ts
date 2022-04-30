@@ -11,7 +11,7 @@ import MyNeedReward from "../views/MyNeedReward.vue";
 import MyHelpReward from "../views/MyHelpReward.vue";
 import SelfInfo from "../views/SelfInfo.vue";
 import LateBack from "../views/LateBack.vue";
-import Repair from "../views/Repair.vue";
+import ToRepair from "../views/ToRepair.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -77,9 +77,9 @@ const routes: Array<RouteRecordRaw> = [
         component: LateBack,
       },
       {
-        path: "/repair",
-        name: "repair",
-        component: Repair,
+        path: "/toRepair",
+        name: "toRepair",
+        component: ToRepair,
       },
     ],
   },

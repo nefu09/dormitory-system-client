@@ -134,7 +134,7 @@ export default defineComponent({
             router.replace(`/`);
             ElMessage.error("账号或密码错误");
           }
-        }else{
+        } else {
           router.replace(`/`);
         }
       });

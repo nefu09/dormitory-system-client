@@ -8,7 +8,7 @@ import Vue from "./App.vue";
 import { ref } from "vue";
 const app = createApp(App);
 Object.keys(ElIconModules).forEach(function (key) {
-    app.component(ElIconModules[key].name, ElIconModules[key])
+  app.component(ElIconModules[key].name, ElIconModules[key]);
 });
 
 app.use(router);

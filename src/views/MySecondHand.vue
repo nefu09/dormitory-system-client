@@ -348,7 +348,7 @@ export default defineComponent({
                   axios
                     .post(`/uploadGoods`, UploadGooods01.value)
                     .then((resp) => {
-                      if (resp && resp.data.code== 200) {
+                      if (resp && resp.data.code == 200) {
                         //刷新该公寓同学发布的闲置产品
                         axios
                           .post(`/getSelfGoods/${nowNumber}`)
