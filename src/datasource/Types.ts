@@ -81,7 +81,7 @@ export interface Repair {
   dormitoryNumber?: number;
   //已报为0，已接收为1，已完成为2
   state?: number;
-  date?: Date;
+  date?: string;
   //物品图片
   url?: string;
 }
