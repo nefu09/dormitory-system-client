@@ -81,6 +81,26 @@
             <template #header>
               <div class="card-header">
                 <span>{{ item.name }}</span>
+                <div style="">
+                  <el-button class="button" type="text" @click="toEdit(item)"
+                    >编辑</el-button
+                  >
+                  <el-popconfirm
+                    confirm-button-text="Yes"
+                    cancel-button-text="No"
+                    :icon="InfoFilled"
+                    icon-color="red"
+                    title="确定要取消吗?"
+                    @confirm="cancel(item)"
+                    @cancel="cancelEvent"
+                  >
+                    <template #reference>
+                      <el-button size="small" style="color: #ca6924"
+                        >撤销</el-button
+                      >
+                    </template>
+                  </el-popconfirm>
+                </div>
               </div>
             </template>
             <div style="width: 100%; height: 200px">
@@ -88,9 +108,7 @@
                 <el-descriptions-item>
                   <template #label>
                     <div class="cell-item">
-                      <el-icon :style="iconStyle">
-                        <user />
-                      </el-icon>
+                      <el-icon><house /></el-icon>
                       寝室号
                     </div>
                   </template>
@@ -100,9 +118,7 @@
                 <el-descriptions-item :formatter="timeFormatter">
                   <template #label>
                     <div class="cell-item">
-                      <el-icon :style="iconStyle">
-                        <location />
-                      </el-icon>
+                      <el-icon><clock /></el-icon>
                       申报日期
                     </div>
                   </template>
@@ -112,16 +128,21 @@
                 <el-descriptions-item>
                   <template #label>
                     <div class="cell-item">
-                      <el-icon :style="iconStyle">
-                        <tickets />
-                      </el-icon>
+                      <el-icon><refresh-left /></el-icon>
                       状态
                     </div>
                   </template>
                   <el-tag size="small">
-                    <span v-if="item.state == 0" style="color:black">已申请</span>
-                    <span v-if="item.state == 1" >已接收</span>
-                    <span v-if="item.state == 2" style="color:green">已完成</span>
+                    <span v-if="item.state == 0" style="color: black"
+                      >已申请</span
+                    >
+                    <span v-if="item.state == 1">已接收</span>
+                    <span v-if="item.state == 2" style="color: green"
+                      >已完成</span
+                    >
+                    <span v-if="item.state == 3" style="color: #6b6882"
+                      >已撤销</span
+                    >
                   </el-tag>
                 </el-descriptions-item>
 
@@ -129,12 +150,12 @@
                   <template #label>
                     <div class="cell-item">
                       <el-icon :style="iconStyle">
-                        <office-building />
+                        <tickets />
                       </el-icon>
                       详情
                     </div>
                   </template>
-                  {{item.description}}
+                  {{ item.description }}
                 </el-descriptions-item>
               </el-descriptions>
             </div>
@@ -142,6 +163,44 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 编辑 -->
+    <el-dialog title="编辑" v-model="isEdit">
+      <el-form :model="editRepair01" label-width="120px" ref="editForm">
+        <el-form-item
+          label="损坏物品"
+          prop="name"
+          :rules="[{ required: true, message: 'name is required' }]"
+        >
+          <el-input
+            type="text"
+            autocomplete="off"
+            v-model="editRepair01.name"
+          />
+        </el-form-item>
+        <el-form-item label="损坏详情" prop="description">
+          <el-input
+            type="text"
+            autocomplete="off"
+            v-model="editRepair01.description"
+          />
+        </el-form-item>
+        <el-upload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          list-type="picture-card"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :limit="3"
+          :on-exceed="addOverLimit"
+          ref="addPictures"
+        >
+          <el-icon><Plus /></el-icon>
+        </el-upload>
+        <el-form-item style="margin-left: 153px; margin-top: 20px">
+          <el-button type="primary" @click="submitEditRepair()">确定</el-button>
+          <el-button @click="isEdit = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!-- 报修 -->
     <el-dialog title="报修" v-model="isAdd">
       <el-form :model="addRepair01" label-width="120px" ref="addForm">
@@ -196,6 +255,7 @@ import { useRouter } from "vue-router";
 import { Login, Student, Admin, Goods, Repair } from "@/datasource/Types";
 import type { UploadFile, UploadProps, UploadUserFile } from "element-plus";
 import { ElMessage } from "element-plus/lib/components";
+import { el } from "element-plus/lib/locale";
 export default defineComponent({
   setup() {
     const router = useRouter();
@@ -217,15 +277,7 @@ export default defineComponent({
     var addPictures = ref(null);
     var fileList1: UploadFile[] = [];
     var fileList = ref(fileList1);
-    const urls = [
-      "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-      "https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg",
-      "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-      "https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg",
-      "https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg",
-      "https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg",
-      "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
-    ];
+    var cancelRepair: Repair = {};
     var si = sessionStorage.getItem("studentInfo");
     if (si != null) {
       student = JSON.parse(si);
@@ -339,6 +391,116 @@ export default defineComponent({
       });
       return format;
     }
+    function toEdit(item: Repair) {
+      editRepair01.value.id = item.id;
+      editRepair01.value.name = item.name;
+      editRepair01.value.description = item.description;
+      editRepair01.value.studentNumber = item.studentNumber;
+      editRepair01.value.dormitoryNumber = item.dormitoryNumber;
+      editRepair01.value.state = item.state;
+      editRepair01.value.date = item.date;
+      editRepair01.value.state = item.state;
+      isEdit.value = true;
+      fileList.value = [];
+      item.url.split(";").forEach((u) => {
+        var tmp: UploadFile = {
+          url: u,
+          name: "",
+          status: "success",
+          uid: 0,
+          raw: null,
+        };
+        fileList.value.push(tmp);
+      });
+    }
+    function submitEditRepair() {
+      var result = [];
+      editForm.value.validateField("name", (errorMessage) => {
+        if (errorMessage == false) {
+          ElMessage.error("损坏物品名称不能为空");
+        }
+      });
+      if (fileList.value.length == 0) {
+        ElMessage({
+          message: "请至少上传一张照片",
+          type: "warning",
+        });
+      }
+      editForm.value.validate((valid) => {
+        if (valid == true && fileList.value.length != 0) {
+          fileList.value.forEach((file) => {
+            if (file.raw == null) {
+              result.push(file.url);
+              if (result.length == fileList.value.length) {
+                editRepair01.value.url = result.join(";");
+                axios.post(`/updateRepair`, editRepair01.value).then((resp) => {
+                  if (resp && resp.data.code == 200) {
+                    if (resp.data.data.repairs != null) {
+                      repairs01.value = resp.data.data.repairs;
+                      ElMessage({
+                        message: "编辑成功",
+                        type: "success",
+                      });
+                      isEdit.value = false;
+                      editRepair01.value = {};
+                    }
+                  }
+                });
+              }
+            } else {
+              var param = new FormData();
+              param.append("file", file.raw);
+              axios.post(`/addPicture`, param).then((resp) => {
+                if (resp && resp.data.code == 200) {
+                  if (resp.data.data.url != null) {
+                    result.push(resp.data.data.url);
+                    if (result.length == fileList.value.length) {
+                      editRepair01.value.url = result.join(";");
+                      axios
+                        .post(`/updateRepair`, editRepair01.value)
+                        .then((resp) => {
+                          if (resp && resp.data.code == 200) {
+                            if (resp.data.data.repairs != null) {
+                              repairs01.value = resp.data.data.repairs;
+                              ElMessage({
+                                message: "编辑成功",
+                                type: "success",
+                              });
+                              isEdit.value = false;
+                              editRepair01.value = {};
+                            }
+                          }
+                        });
+                    }
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+    function cancel(item: Repair) {
+      cancelRepair.id = item.id;
+      cancelRepair.name = item.name;
+      cancelRepair.description = item.description;
+      cancelRepair.studentNumber = item.studentNumber;
+      cancelRepair.dormitoryNumber = item.dormitoryNumber;
+      cancelRepair.state = item.state;
+      cancelRepair.date = item.date;
+      cancelRepair.state = 3;
+      axios.post(`/updateRepair`, cancelRepair).then((resp) => {
+        if (resp && resp.data.code == 200) {
+          if (resp.data.data.repairs != null) {
+            repairs01.value = resp.data.data.repairs;
+            ElMessage({
+              message: "撤销成功",
+              type: "success",
+            });
+          }
+        }
+      });
+    }
     return {
       repairs01,
       editRepair01,
@@ -348,6 +510,7 @@ export default defineComponent({
       handleCurrentChange,
       isEdit,
       isAdd,
+      toEdit,
       addForm,
       editForm,
       submitAddRepair,
@@ -357,6 +520,8 @@ export default defineComponent({
       addOverLimit,
       addPictures,
       timeFormatter,
+      submitEditRepair,
+      cancel,
     };
   },
 });
