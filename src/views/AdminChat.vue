@@ -8,16 +8,6 @@
               >（点击聊天气泡开始聊天）</span
             >
           </div>
-          <span style="color: #177cb0">管理员</span>
-          <el-icon
-            class="el-icon-chat-dot-round"
-            style="margin-left: 10px; font-size: 16px; cursor: pointer"
-            @click="toAdminSingleChat()"
-            ><chat-dot-round
-          /></el-icon>
-          <span style="font-size: 12px; color: limegreen; margin-left: 5px"
-            >chatting...</span
-          >
 
           <div
             style="padding: 10px 0"
@@ -29,7 +19,7 @@
               <el-icon
                 class="el-icon-chat-dot-round"
                 style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                @click="toSingleChat(student)"
+                @click="toAdminSingleChat(student)"
                 ><chat-dot-round
               /></el-icon>
               <span style="font-size: 12px; color: limegreen; margin-left: 5px"
@@ -51,7 +41,7 @@
           "
         >
           <div style="text-align: center; line-height: 50px">
-            {{ apartment }}公寓群
+            {{ admin01.dormitoryBuilding }}公寓群
           </div>
 
           <div
@@ -102,12 +92,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     var text = ref("");
-    var student: Student = {};
-    var nowNumber = "";
     var admin: Admin = {};
     var admin01 = ref(admin);
-    var nowUser: string;
-    var apartment = "";
     var url = "";
     var content = ref("");
     var allStudents: Student[] = [];
@@ -115,48 +101,31 @@ export default defineComponent({
 
     const isStudent = sessionStorage.getItem("isStudent");
     if (isStudent != null) {
-      var si = sessionStorage.getItem("studentInfo");
-      if (si != null) {
-        student = JSON.parse(si);
+      var ai = sessionStorage.getItem("adminInfo");
+      if (ai != null) {
+        admin01.value = JSON.parse(ai);
         url =
           "ws://localhost:8081/chat/" +
-          student.studentNumber +
+          admin01.value.adminNumber +
           "/" +
-          student.name +
-          "/1";
-        if (student.name != null) {
-          nowUser = student.name;
-        }
-        if (student.dormitoryBuilding != null) {
-          apartment = student.dormitoryBuilding;
-        }
-        if (student.studentNumber != null) {
-          nowNumber = student.studentNumber;
-        }
+          admin01.value.name +
+          "/0";
       }
     }
-    axios.get(`/student/getOneApartmentStudents/${apartment}`).then((resp) => {
-      if (resp) {
-        if (resp.data.code == 200) {
-          if (resp.data.data.students != null) {
-            allStudents01.value = resp.data.data.students;
-            allStudents01.value = allStudents01.value.filter(
-              (s) => s.studentNumber != nowNumber
-            );
+    axios
+      .get(
+        `/student/getOneApartmentStudents/${admin01.value.dormitoryBuilding}`
+      )
+      .then((resp) => {
+        if (resp) {
+          if (resp.data.code == 200) {
+            if (resp.data.data.students != null) {
+              allStudents01.value = resp.data.data.students;
+            }
           }
         }
-      }
-    });
+      });
 
-    axios.get(`/student/getApartmentAdmin/${apartment}`).then((resp) => {
-      if (resp) {
-        if (resp.data.code == 200) {
-          if (resp.data.data.admin != null) {
-            admin01.value = resp.data.data.admin;
-          }
-        }
-      }
-    });
     var socket = new WebSocket(url);
     //打开事件
     socket.onopen = function () {
@@ -166,7 +135,7 @@ export default defineComponent({
     socket.onmessage = function (msg) {
       console.log("收到数据====" + msg.data);
       let data = JSON.parse(msg.data); // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
-      if (data.from != student.studentNumber && data.to == "all") {
+      if (data.from != admin01.value.adminNumber && data.to == "all") {
         createContent(data.from, ref(data.text));
       }
     };
@@ -181,18 +150,18 @@ export default defineComponent({
     function send() {
       // 组装待发送的消息 json
       // {"from": "zhang", "to": "admin", "text": "聊天文本"}
-      let message = { from: student.studentNumber, to: "all", text: text };
+      let message = { from: admin01.value.adminNumber, to: "all", text: text };
       socket.send(JSON.stringify(message)); // 将组装好的json发送给服务端，由服务端进行转发
       // this.messages.push({user: this.user.username, text: this.text})
       // // 构建消息内容，本人消息
-      if (student.studentNumber != null) {
-        createContent(student.studentNumber, ref(text));
+      if (admin01.value.adminNumber != null) {
+        createContent(admin01.value.adminNumber, ref(text));
       }
       text.value = "";
     }
     function createContent(number: string, text: Ref) {
       var html = "";
-      if (number == student.studentNumber) {
+      if (number == admin01.value.adminNumber) {
         // nowUser 表示是否显示当前用户发送的聊天消息，绿色气泡
         html =
           '<div class="el-row" style="padding: 5px 0">\n' +
@@ -225,22 +194,18 @@ export default defineComponent({
       }
       content.value += html;
     }
-    function toSingleChat(student: Student) {
-      router.replace(`/singleChat/${student.studentNumber}/${student.name}`);
-    }
-    function toAdminSingleChat() {
-      router.replace(`/singleChat/${admin01.value.adminNumber}/管理员`);
+    function toAdminSingleChat(student: Student) {
+      router.replace(
+        `/adminSingleChat/${student.studentNumber}/${student.name}`
+      );
     }
     return {
       send,
       text,
       content,
       allStudents01,
-      nowNumber,
-      toSingleChat,
-      apartment,
-      admin01,
       toAdminSingleChat,
+      admin01,
     };
   },
 });

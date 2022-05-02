@@ -101,8 +101,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const login: Login = {
-      userName: "2018214215",
-      password: "2018214215",
+      userName: "1000001",
+      password: "1000001",
     };
     const login01 = ref(login);
     // const student: Student = {};

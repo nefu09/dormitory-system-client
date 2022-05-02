@@ -24,7 +24,7 @@
         <template #title>晚归申请</template>
       </el-menu-item>
       <el-menu-item index="/toRepair">
-        <template #title>报修管理</template>
+        <template #title>报修申请</template>
       </el-menu-item>
       <el-menu-item index="/selfInfo">
         <template #title>个人信息</template>

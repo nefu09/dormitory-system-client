@@ -4,38 +4,36 @@
       <el-col :span="4">
         <el-card style="width: 250px; height: 300px; color: #333">
           <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">
-            在线用户<span style="font-size: 12px"
-              >（点击聊天气泡开始聊天）</span
+            在线用户<span style="font-size: 12px">（点击聊天气泡开始聊天)</span>
+          </div>
+          <div>
+            <span style="color: #48c0a3">群&nbsp;&nbsp;&nbsp;聊</span>
+            <el-icon
+              class="el-icon-chat-dot-round"
+              style="margin-left: 10px; font-size: 16px; cursor: pointer"
+              @click="toAdminChat()"
+              ><chat-dot-round
+            /></el-icon>
+
+            <span style="font-size: 12px; color: limegreen; margin-left: 5px"
+              >chatting...</span
             >
           </div>
-          <span style="color: #177cb0">管理员</span>
-          <el-icon
-            class="el-icon-chat-dot-round"
-            style="margin-left: 10px; font-size: 16px; cursor: pointer"
-            @click="toAdminSingleChat()"
-            ><chat-dot-round
-          /></el-icon>
-          <span style="font-size: 12px; color: limegreen; margin-left: 5px"
-            >chatting...</span
-          >
-
           <div
-            style="padding: 10px 0"
+            style="padding: 8px 0"
             v-for="student in allStudents01"
             :key="student.name"
           >
-            <div>
-              <span>{{ student.name }}</span>
-              <el-icon
-                class="el-icon-chat-dot-round"
-                style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                @click="toSingleChat(student)"
-                ><chat-dot-round
-              /></el-icon>
-              <span style="font-size: 12px; color: limegreen; margin-left: 5px"
-                >chatting...</span
-              >
-            </div>
+            <span>{{ student.name }}</span>
+            <el-icon
+              class="el-icon-chat-dot-round"
+              style="margin-left: 10px; font-size: 16px; cursor: pointer"
+              @click="toAdminSingleChat(student)"
+              ><chat-dot-round
+            /></el-icon>
+            <span style="font-size: 12px; color: limegreen; margin-left: 5px"
+              >chatting...</span
+            >
           </div>
         </el-card>
       </el-col>
@@ -51,7 +49,7 @@
           "
         >
           <div style="text-align: center; line-height: 50px">
-            {{ apartment }}公寓群
+            {{ name }}
           </div>
 
           <div
@@ -96,67 +94,43 @@
 <script lang="ts">
 import { defineComponent, Ref, ref } from "vue";
 import axios from "@/axios/index";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { Login, Student, Admin } from "@/datasource/Types";
 export default defineComponent({
+  props: ["number", "name"],
   setup() {
+    const route = useRoute();
     const router = useRouter();
     var text = ref("");
-    var student: Student = {};
-    var nowNumber = "";
     var admin: Admin = {};
-    var admin01 = ref(admin);
-    var nowUser: string;
-    var apartment = "";
     var url = "";
     var content = ref("");
     var allStudents: Student[] = [];
     var allStudents01 = ref(allStudents);
-
     const isStudent = sessionStorage.getItem("isStudent");
-    if (isStudent != null) {
-      var si = sessionStorage.getItem("studentInfo");
-      if (si != null) {
-        student = JSON.parse(si);
+    if (isStudent != null && isStudent == "false") {
+      var ai = sessionStorage.getItem("adminInfo");
+      if (ai != null) {
+        admin = JSON.parse(ai);
         url =
           "ws://localhost:8081/chat/" +
-          student.studentNumber +
+          admin.adminNumber +
           "/" +
-          student.name +
-          "/1";
-        if (student.name != null) {
-          nowUser = student.name;
-        }
-        if (student.dormitoryBuilding != null) {
-          apartment = student.dormitoryBuilding;
-        }
-        if (student.studentNumber != null) {
-          nowNumber = student.studentNumber;
-        }
+          admin.name +
+          "/0";
       }
     }
-    axios.get(`/student/getOneApartmentStudents/${apartment}`).then((resp) => {
-      if (resp) {
-        if (resp.data.code == 200) {
-          if (resp.data.data.students != null) {
-            allStudents01.value = resp.data.data.students;
-            allStudents01.value = allStudents01.value.filter(
-              (s) => s.studentNumber != nowNumber
-            );
+    axios
+      .get(`/student/getOneApartmentStudents/${admin.dormitoryBuilding}`)
+      .then((resp) => {
+        if (resp) {
+          if (resp.data.code == 200) {
+            if (resp.data.data.students != null) {
+              allStudents01.value = resp.data.data.students;
+            }
           }
         }
-      }
-    });
-
-    axios.get(`/student/getApartmentAdmin/${apartment}`).then((resp) => {
-      if (resp) {
-        if (resp.data.code == 200) {
-          if (resp.data.data.admin != null) {
-            admin01.value = resp.data.data.admin;
-          }
-        }
-      }
-    });
+      });
     var socket = new WebSocket(url);
     //打开事件
     socket.onopen = function () {
@@ -166,7 +140,7 @@ export default defineComponent({
     socket.onmessage = function (msg) {
       console.log("收到数据====" + msg.data);
       let data = JSON.parse(msg.data); // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
-      if (data.from != student.studentNumber && data.to == "all") {
+      if (data.from == route.params.number && data.to == admin.adminNumber) {
         createContent(data.from, ref(data.text));
       }
     };
@@ -181,18 +155,22 @@ export default defineComponent({
     function send() {
       // 组装待发送的消息 json
       // {"from": "zhang", "to": "admin", "text": "聊天文本"}
-      let message = { from: student.studentNumber, to: "all", text: text };
+      let message = {
+        from: admin.adminNumber,
+        to: route.params.number,
+        text: text,
+      };
       socket.send(JSON.stringify(message)); // 将组装好的json发送给服务端，由服务端进行转发
       // this.messages.push({user: this.user.username, text: this.text})
       // // 构建消息内容，本人消息
-      if (student.studentNumber != null) {
-        createContent(student.studentNumber, ref(text));
+      if (admin.adminNumber != null) {
+        createContent(admin.adminNumber, ref(text));
       }
       text.value = "";
     }
     function createContent(number: string, text: Ref) {
       var html = "";
-      if (number == student.studentNumber) {
+      if (number == admin.adminNumber) {
         // nowUser 表示是否显示当前用户发送的聊天消息，绿色气泡
         html =
           '<div class="el-row" style="padding: 5px 0">\n' +
@@ -203,7 +181,7 @@ export default defineComponent({
           "  </div>\n" +
           '  <div class="el-col el-col-2">\n' +
           '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
-          '    <img src="https://nljbucket.oss-cn-beijing.aliyuncs.com/test.png?Expires=1650356266&OSSAccessKeyId=TMP.3KeEDrJNfd7KaihgEAUxiwTBLrvQn3jEbNS5XHMYvQMkPMVKL8VEYHPkeMdJS5NpZnZHhhAewaHz3Ne8PRMjqdVVtkppWJ&Signature=%2Fi39Wjh35Sz%2BYm4eZ1EWjfPiFY8%3D" style="object-fit: cover;">\n' +
+          '    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" style="object-fit: cover;">\n' +
           "  </span>\n" +
           "  </div>\n" +
           "</div>";
@@ -225,21 +203,20 @@ export default defineComponent({
       }
       content.value += html;
     }
-    function toSingleChat(student: Student) {
-      router.replace(`/singleChat/${student.studentNumber}/${student.name}`);
+    function toAdminChat() {
+      router.replace(`/adminChat`);
     }
-    function toAdminSingleChat() {
-      router.replace(`/singleChat/${admin01.value.adminNumber}/管理员`);
+    function toAdminSingleChat(student: Student) {
+      router.replace(
+        `/adminSingleChat/${student.studentNumber}/${student.name}`
+      );
     }
     return {
       send,
       text,
       content,
       allStudents01,
-      nowNumber,
-      toSingleChat,
-      apartment,
-      admin01,
+      toAdminChat,
       toAdminSingleChat,
     };
   },

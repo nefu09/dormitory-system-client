@@ -76,7 +76,7 @@
           </div>
           <el-card
             class="box-card"
-            style="display: line-block; width: 350px; height: 250px"
+            style="display: line-block; width: 350px; height: 290px"
           >
             <template #header>
               <div class="card-header">
@@ -399,7 +399,6 @@ export default defineComponent({
       editRepair01.value.dormitoryNumber = item.dormitoryNumber;
       editRepair01.value.state = item.state;
       editRepair01.value.date = item.date;
-      editRepair01.value.state = item.state;
       isEdit.value = true;
       fileList.value = [];
       item.url.split(";").forEach((u) => {

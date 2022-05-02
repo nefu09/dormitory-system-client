@@ -12,6 +12,14 @@ import MyHelpReward from "../views/MyHelpReward.vue";
 import SelfInfo from "../views/SelfInfo.vue";
 import LateBack from "../views/LateBack.vue";
 import ToRepair from "../views/ToRepair.vue";
+import Admin from "../views/Admin.vue";
+import AdminChat from "../views/AdminChat.vue";
+import AdminLateBack from "../views/AdminLateBack.vue";
+import AdminNotice from "../views/AdminNotice.vue";
+import AdminToRepair from "../views/AdminToRepair.vue";
+import AdminSingleChat from "../views/AdminSingleChat.vue";
+import StudentInfo from "../views/StudentInfo.vue";
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -80,6 +88,46 @@ const routes: Array<RouteRecordRaw> = [
         path: "/toRepair",
         name: "toRepair",
         component: ToRepair,
+      },
+    ],
+  },
+  {
+    props: true,
+    path: "/admin",
+    name: "Admin",
+    component: Admin,
+    children: [
+      {
+        props: true,
+        path: "/adminChat",
+        name: "AdminChat",
+        component: AdminChat,
+      },
+      {
+        props: true,
+        path: "/adminSingleChat/:number/:name",
+        name: "adminSingleChat",
+        component: AdminSingleChat,
+      },
+      {
+        path: "/adminLateBack",
+        name: "AdminLateBack",
+        component: AdminLateBack,
+      },
+      {
+        path: "/adminNotice",
+        name: "AdminNotice",
+        component: AdminNotice,
+      },
+      {
+        path: "/adminTorepair",
+        name: "AdminToRepair",
+        component: AdminToRepair,
+      },
+      {
+        path: "/studentInfo",
+        name: "StudentInfo",
+        component: StudentInfo,
       },
     ],
   },

@@ -7,7 +7,7 @@
             在线用户<span style="font-size: 12px">（点击聊天气泡开始聊天)</span>
           </div>
           <div>
-            <span>群&nbsp;&nbsp;&nbsp;聊</span>
+            <span style="color: #48c0a3">群&nbsp;&nbsp;&nbsp;聊</span>
             <el-icon
               class="el-icon-chat-dot-round"
               style="margin-left: 10px; font-size: 16px; cursor: pointer"
@@ -19,6 +19,16 @@
               >chatting...</span
             >
           </div>
+          <span style="color: #177cb0">管理员</span>
+          <el-icon
+            class="el-icon-chat-dot-round"
+            style="margin-left: 10px; font-size: 16px; cursor: pointer"
+            @click="toAdminSingleChat()"
+            ><chat-dot-round
+          /></el-icon>
+          <span style="font-size: 12px; color: limegreen; margin-left: 5px"
+            >chatting...</span
+          >
           <div
             style="padding: 8px 0"
             v-for="student in allStudents01"
@@ -94,11 +104,12 @@
 <script lang="ts">
 import { defineComponent, Ref, ref } from "vue";
 import axios from "@/axios/index";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { Login, Student, Admin } from "@/datasource/Types";
 export default defineComponent({
   props: ["number", "name"],
   setup() {
+    const route = useRoute();
     const router = useRouter();
     var text = ref("");
     var student: Student = {};
@@ -110,7 +121,6 @@ export default defineComponent({
     var content = ref("");
     var allStudents: Student[] = [];
     var allStudents01 = ref(allStudents);
-    //alert(router.getRoutes.prototype.student);
     const isStudent = sessionStorage.getItem("isStudent");
     if (isStudent != null && isStudent == "true") {
       var si = sessionStorage.getItem("studentInfo");
@@ -120,7 +130,8 @@ export default defineComponent({
           "ws://localhost:8081/chat/" +
           student.studentNumber +
           "/" +
-          student.name;
+          student.name +
+          "/1";
         if (student.name != null) {
           nowUser = student.name;
         }
@@ -129,22 +140,6 @@ export default defineComponent({
         }
         if (student.studentNumber != null) {
           nowNumber = student.studentNumber;
-        }
-      }
-    } else if (isStudent != null && isStudent == "false") {
-      var ai = sessionStorage.getItem("adminInfo");
-      if (ai != null) {
-        admin = JSON.parse(ai);
-        url =
-          "ws://localhost:8081/chat/" + admin.adminNumber + "/" + admin.name;
-        if (admin.name != null) {
-          nowUser = admin.name;
-        }
-        if (admin.dormitoryBuilding != null) {
-          apartment = admin.dormitoryBuilding;
-        }
-        if (admin.adminNumber != null) {
-          nowNumber = admin.adminNumber;
         }
       }
     }
@@ -169,7 +164,10 @@ export default defineComponent({
     socket.onmessage = function (msg) {
       console.log("收到数据====" + msg.data);
       let data = JSON.parse(msg.data); // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
-      if (data.from != student.studentNumber) {
+      if (
+        data.from == route.params.number &&
+        data.to == student.studentNumber
+      ) {
         createContent(data.from, ref(data.text));
       }
     };
@@ -184,7 +182,12 @@ export default defineComponent({
     function send() {
       // 组装待发送的消息 json
       // {"from": "zhang", "to": "admin", "text": "聊天文本"}
-      let message = { from: student.studentNumber, to: "all", text: text };
+      console.log();
+      let message = {
+        from: student.studentNumber,
+        to: route.params.number,
+        text: text,
+      };
       socket.send(JSON.stringify(message)); // 将组装好的json发送给服务端，由服务端进行转发
       // this.messages.push({user: this.user.username, text: this.text})
       // // 构建消息内容，本人消息
@@ -234,6 +237,9 @@ export default defineComponent({
     function toSingleChat(student: Student) {
       router.replace(`/singleChat/${student.studentNumber}/${student.name}`);
     }
+    function toAdminSingleChat(student: Student) {
+      router.replace(`/singleChat/${admin.adminNumber}/管理员`);
+    }
     return {
       send,
       text,
@@ -241,6 +247,7 @@ export default defineComponent({
       allStudents01,
       toChat,
       toSingleChat,
+      toAdminSingleChat,
     };
   },
 });

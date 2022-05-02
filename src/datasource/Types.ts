@@ -60,6 +60,8 @@ export interface Password {
 
 export interface LateBack {
   id?: number;
+  name?: string;
+  dormitoryNumber?: number;
   applyTime?: Date;
   backTime?: Date;
   studentNumber?: string;
@@ -73,6 +75,7 @@ export interface LateBack {
 
 export interface Repair {
   id?: number;
+  studentName?: string;
   name?: string;
   description?: string;
   //申报人学号
