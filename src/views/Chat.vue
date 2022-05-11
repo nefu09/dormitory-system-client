@@ -97,7 +97,8 @@
 import { defineComponent, Ref, ref } from "vue";
 import axios from "@/axios/index";
 import { useRouter } from "vue-router";
-import { Login, Student, Admin } from "@/datasource/Types";
+import { Login, Student, Admin, Message } from "@/datasource/Types";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   setup() {
     const router = useRouter();
@@ -112,6 +113,7 @@ export default defineComponent({
     var content = ref("");
     var allStudents: Student[] = [];
     var allStudents01 = ref(allStudents);
+    var allMessages: Message[] = [];
 
     const isStudent = sessionStorage.getItem("isStudent");
     if (isStudent != null) {
@@ -143,6 +145,72 @@ export default defineComponent({
             allStudents01.value = allStudents01.value.filter(
               (s) => s.studentNumber != nowNumber
             );
+            axios
+              .post(`/getMessages/${student.dormitoryBuilding}/all`)
+              .then((resp) => {
+                if (resp) {
+                  if (resp.data.code == 200) {
+                    if (resp.data.data.messages != null) {
+                      allMessages = resp.data.data.messages;
+                      var html = "";
+                      allMessages.forEach((message) => {
+                        if (message.from1 == student.studentNumber) {
+                          html =
+                            '<div class="el-row" style="padding: 5px 0">\n' +
+                            '  <div class="el-col el-col-22" style="text-align: right; padding-right: 10px">\n' +
+                            '    <div class="tip left">' +
+                            message.text1 +
+                            "</div>\n" +
+                            "  </div>\n" +
+                            '  <div class="el-col el-col-2">\n' +
+                            '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
+                            '   <img src="' +
+                            student.url +
+                            '"style="object-fit: cover;">\n' +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            "</div>";
+                          content.value += html;
+                        } else {
+                          var accepterUrl = "";
+                          var name = "";
+                          allStudents01.value.forEach((s) => {
+                            if (s.studentNumber == message.from1) {
+                              accepterUrl = s.url;
+                              name = s.name;
+                            }
+                          });
+                          if (accepterUrl == "") {
+                            name = "管理员";
+                            accepterUrl =
+                              "https://nljbucket.oss-cn-beijing.aliyuncs.com/42fc0cce-78ad-45d1-873c-75c7e8e6984b-chatAdmin.png?Expires=1667740856&OSSAccessKeyId=LTAI5tSRziSf7nWeTbGUiG7A&Signature=%2B%2FInOmYq2RngGLmFm9Huiy4K2Cs%3D";
+                          }
+                          // remoteUser表示远程用户聊天消息，蓝色的气泡
+                          html =
+                            '<div class="el-row" style="padding: 5px 0">\n' +
+                            '  <div class="el-col el-col-2" style="text-align: right">\n' +
+                            '<span style="margin-right:5px;font-size:10px;color:gray">' +
+                            name +
+                            "</span>" +
+                            '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
+                            "    <img src=" +
+                            accepterUrl +
+                            ' style="object-fit: cover;">\n' +
+                            "  </span>\n" +
+                            "  </div>\n" +
+                            '  <div class="el-col el-col-22" style="text-align: left; padding-left: 10px">\n' +
+                            '    <div class="tip right" style="margin-top:30px">' +
+                            message.text1 +
+                            "</div>\n" +
+                            "  </div>\n" +
+                            "</div>";
+                          content.value += html;
+                        }
+                      });
+                    }
+                  }
+                }
+              });
           }
         }
       }
@@ -179,16 +247,24 @@ export default defineComponent({
     //   console.log("websocket发生了错误");
     // };
     function send() {
-      // 组装待发送的消息 json
-      // {"from": "zhang", "to": "admin", "text": "聊天文本"}
-      let message = { from: student.studentNumber, to: "all", text: text };
-      socket.send(JSON.stringify(message)); // 将组装好的json发送给服务端，由服务端进行转发
-      // this.messages.push({user: this.user.username, text: this.text})
-      // // 构建消息内容，本人消息
-      if (student.studentNumber != null) {
-        createContent(student.studentNumber, ref(text));
+      if (text.value == "") {
+        ElMessage({
+          showClose: true,
+          message: "发送的消息不能为空",
+          type: "warning",
+        });
+      } else {
+        // 组装待发送的消息 json
+        // {"from": "zhang", "to": "admin", "text": "聊天文本"}
+        let message = { from: student.studentNumber, to: "all", text: text };
+        socket.send(JSON.stringify(message)); // 将组装好的json发送给服务端，由服务端进行转发
+        // this.messages.push({user: this.user.username, text: this.text})
+        // // 构建消息内容，本人消息
+        if (student.studentNumber != null) {
+          createContent(student.studentNumber, ref(text));
+        }
+        text.value = "";
       }
-      text.value = "";
     }
     function createContent(number: string, text: Ref) {
       var html = "";
@@ -203,21 +279,41 @@ export default defineComponent({
           "  </div>\n" +
           '  <div class="el-col el-col-2">\n' +
           '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
-          '    <img src="https://nljbucket.oss-cn-beijing.aliyuncs.com/test.png?Expires=1650356266&OSSAccessKeyId=TMP.3KeEDrJNfd7KaihgEAUxiwTBLrvQn3jEbNS5XHMYvQMkPMVKL8VEYHPkeMdJS5NpZnZHhhAewaHz3Ne8PRMjqdVVtkppWJ&Signature=%2Fi39Wjh35Sz%2BYm4eZ1EWjfPiFY8%3D" style="object-fit: cover;">\n' +
+          '    <img src="' +
+          student.url +
+          '" style="object-fit: cover;">\n' +
           "  </span>\n" +
           "  </div>\n" +
           "</div>";
       } else {
         // remoteUser表示远程用户聊天消息，蓝色的气泡
+        var accepterUrl = "";
+        var name = "";
+        allStudents01.value.forEach((s) => {
+          if (s.studentNumber == number) {
+            accepterUrl = s.url;
+            name = s.name;
+          }
+        });
+        if (accepterUrl == "") {
+          name = "管理员";
+          accepterUrl =
+            "https://nljbucket.oss-cn-beijing.aliyuncs.com/42fc0cce-78ad-45d1-873c-75c7e8e6984b-chatAdmin.png?Expires=1667740856&OSSAccessKeyId=LTAI5tSRziSf7nWeTbGUiG7A&Signature=%2B%2FInOmYq2RngGLmFm9Huiy4K2Cs%3D";
+        }
         html =
           '<div class="el-row" style="padding: 5px 0">\n' +
           '  <div class="el-col el-col-2" style="text-align: right">\n' +
+          '<span style="margin-right:5px;font-size:10px;color:gray">' +
+          name +
+          "</span>" +
           '  <span class="el-avatar el-avatar--circle" style="height: 40px; width: 40px; line-height: 40px;">\n' +
-          '    <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" style="object-fit: cover;">\n' +
+          '    <img src="' +
+          accepterUrl +
+          '" style="object-fit: cover;">\n' +
           "  </span>\n" +
           "  </div>\n" +
           '  <div class="el-col el-col-22" style="text-align: left; padding-left: 10px">\n' +
-          '    <div class="tip right">' +
+          '    <div class="tip right" style="margin-top:30px">' +
           text.value +
           "</div>\n" +
           "  </div>\n" +

@@ -9,6 +9,27 @@
       <el-menu-item index="/chat">
         <template #title>即时通讯</template>
       </el-menu-item>
+      <el-menu-item index="/notice" @click="updateHasNotReadNotice()">
+        <template #title
+          >群通知<svg
+            v-if="hasNotReadNotice"
+            t="1651560854974"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="1721"
+            width="15"
+            height="15"
+          >
+            <path
+              d="M512 322c-104.92 0-190 85.08-190 190s85.08 190 190 190 190-85.06 190-190-85.08-190-190-190z"
+              p-id="1722"
+              fill="#d81e06"
+            ></path></svg
+        ></template>
+      </el-menu-item>
+
       <el-sub-menu>
         <template #title>二手交易</template>
         <el-menu-item index="/secondHand">随便逛逛</el-menu-item>
@@ -47,8 +68,42 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import axios from "@/axios";
+import { Student } from "@/datasource/Types";
+import { useRouter, useRoute } from "vue-router";
+import { defineComponent, ref } from "vue";
+import { af } from "element-plus/lib/locale";
+export default defineComponent({
   name: "Aside",
-};
+  setup() {
+    var route = useRoute();
+    var student: Student = {};
+    var hasNotReadNotice = ref();
+    const isStudent = sessionStorage.getItem("isStudent");
+    if (isStudent != null && isStudent == "true") {
+      var si = sessionStorage.getItem("studentInfo");
+      if (si != null) {
+        student = JSON.parse(si);
+      }
+    }
+
+    function updateHasNotReadNotice() {
+      hasNotReadNotice.value = false;
+    }
+
+    axios.get(`getNoticeReadDetail/${student.studentNumber}`).then((resp) => {
+      if (resp && resp.data.code == 200) {
+        if (resp.data.data.hasNotReadNotice != null) {
+          hasNotReadNotice.value = resp.data.data.hasNotReadNotice;
+        }
+      }
+    });
+
+    return {
+      hasNotReadNotice,
+      updateHasNotReadNotice,
+    };
+  },
+});
 </script>

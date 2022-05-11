@@ -7,7 +7,7 @@
       width: 50px;
       height: 50px;
       position: absolute;
-      right: 10px;
+      right: 20px;
       top: 405px;
     "
     @click="isUpload = true"
@@ -15,7 +15,7 @@
     <img src="../assets/add.png" alt="" style="width: 50px; height: 50px" />
     <span style="font-size: 12px">发布闲置</span>
   </div>
-  <div style="width=1000px;height=500px;margin-top:30px;margin-left:20px">
+  <div style="width=1000px;height=500px;margin-top:30px;margin-left:50px">
     <el-row>
       <el-col
         v-for="item in selfGoods01.slice((nowPage - 1) * 6, nowEndNumber)"

@@ -125,7 +125,7 @@ export default defineComponent({
               );
               sessionStorage.setItem("isStudent", "true");
             } else {
-              router.replace(`/admin`);
+              router.replace(`/adminChat`);
               const adminInfo = resp.data.data.adminInfo;
               sessionStorage.setItem("adminInfo", JSON.stringify(adminInfo));
               sessionStorage.setItem("isStudent", "false");

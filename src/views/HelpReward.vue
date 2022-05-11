@@ -75,7 +75,7 @@
                   </template>
                   {{ item.price }}元
                 </el-descriptions-item>
-                <el-descriptions-item>
+                <el-descriptions-item width="300px">
                   <template #label>
                     <div class="cell-item">
                       <el-icon :style="iconStyle">
@@ -87,12 +87,12 @@
                   <div style="display: inline-block">
                     {{ item.ownerPhone }}
                     <span
-                      style="position: absolute; right: 30px"
+                      style="position: absolute; right: 30px; color: green"
                       @click="toSingleChat(item.ownerNumber)"
                     >
-                      <el-button type="text" class="button">直接聊天</el-button>
-                      <el-icon><chat-dot-round /></el-icon
-                    ></span>
+                      <el-button type="text" class="button"></el-button>
+                      <el-icon><chat-dot-round /></el-icon>chatting...</span
+                    >
                   </div>
                 </el-descriptions-item>
                 <el-descriptions-item>

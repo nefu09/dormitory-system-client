@@ -35,7 +35,7 @@
               size="small"
               @click="toRefreshSchedule(scope.row)"
               :disabled="scope.row.state != 0"
-              >更新进度</el-button
+              >审批</el-button
             >
           </template>
         </el-table-column>

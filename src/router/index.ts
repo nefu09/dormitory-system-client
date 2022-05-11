@@ -12,6 +12,7 @@ import MyHelpReward from "../views/MyHelpReward.vue";
 import SelfInfo from "../views/SelfInfo.vue";
 import LateBack from "../views/LateBack.vue";
 import ToRepair from "../views/ToRepair.vue";
+import Notice from "../views/Notice.vue";
 import Admin from "../views/Admin.vue";
 import AdminChat from "../views/AdminChat.vue";
 import AdminLateBack from "../views/AdminLateBack.vue";
@@ -88,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/toRepair",
         name: "toRepair",
         component: ToRepair,
+      },
+      {
+        path: "/notice",
+        name: "notice",
+        component: Notice,
       },
     ],
   },

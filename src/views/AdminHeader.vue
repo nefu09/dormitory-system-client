@@ -51,7 +51,7 @@
         :rules="[{ required: true, message: ' 旧密码不能为空' }]"
       >
         <el-input
-          type="text"
+          type="password"
           autocomplete="off"
           v-model="password01.originPassword"
           placeholder="请输入旧密码"
@@ -63,7 +63,7 @@
         :rules="[{ required: true, message: '新密码不能为空' }]"
       >
         <el-input
-          type="text"
+          type="password"
           autocomplete="off"
           v-model="password01.newPassword"
           placeholder="请输入新密码"
@@ -75,7 +75,7 @@
         :rules="[{ required: true, message: '确认密码不能为空' }]"
       >
         <el-input
-          type="text"
+          type="password"
           autocomplete="off"
           v-model="password01.againPassword"
           placeholder="请再次确认新密码"
@@ -147,7 +147,7 @@ export default defineComponent({
             .then((resp) => {
               if (resp && resp.data.code == 200) {
                 ElMessage({
-                  message: "修改成功",
+                  message: "密码修改成功,请重新登录",
                   type: "success",
                 });
                 isEditPassword.value = false;

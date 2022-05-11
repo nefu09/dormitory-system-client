@@ -88,3 +88,19 @@ export interface Repair {
   //物品图片
   url?: string;
 }
+
+export interface Notice {
+  id?: number;
+  description?: string;
+  dormitoryBuilding?: string;
+  date?: string;
+}
+
+export interface Message {
+  id?: number;
+  from1?: string;
+  to1?: string;
+  text1?: string;
+  date1?: Date;
+  dormitoryBuilding?: string;
+}

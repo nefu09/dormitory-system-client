@@ -345,7 +345,6 @@ export default defineComponent({
                         ? "0" + nowTime.getDate()
                         : nowTime.getDate();
                     addRepair01.value.date = year + "-" + month + "-" + day;
-                    alert(addRepair01.value.date);
                     axios.post(`/addRepair`, addRepair01.value).then((resp) => {
                       if (resp && resp.data.code == 200) {
                         if (resp.data.data.repairs != null) {
