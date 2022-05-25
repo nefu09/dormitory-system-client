@@ -47,6 +47,9 @@
       <el-menu-item index="/toRepair">
         <template #title>报修申请</template>
       </el-menu-item>
+      <el-menu-item index="/unreasonable">
+        <template #title>个人违纪</template>
+      </el-menu-item>
       <el-menu-item index="/selfInfo">
         <template #title>个人信息</template>
       </el-menu-item>

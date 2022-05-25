@@ -20,6 +20,8 @@ import AdminNotice from "../views/AdminNotice.vue";
 import AdminToRepair from "../views/AdminToRepair.vue";
 import AdminSingleChat from "../views/AdminSingleChat.vue";
 import StudentInfo from "../views/StudentInfo.vue";
+import Unreasonable from "../views/Unreasonable.vue";
+import AdminUnreasonable from "../views/AdminUnreasonable.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -95,6 +97,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "notice",
         component: Notice,
       },
+      {
+        path: "/unreasonable",
+        name: "unreasonable",
+        component: Unreasonable,
+      },
     ],
   },
   {
@@ -134,6 +141,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/studentInfo",
         name: "StudentInfo",
         component: StudentInfo,
+      },
+      {
+        path: "/adminUnreasonable",
+        name: "AdminUnreasonable",
+        component: AdminUnreasonable,
       },
     ],
   },

@@ -36,7 +36,7 @@
           p-id="11867"
         ></path>
       </svg>
-      发帖子
+      发布通知
     </div>
     <div style="position: absolute; top: 150px; left: 300px">
       <el-table

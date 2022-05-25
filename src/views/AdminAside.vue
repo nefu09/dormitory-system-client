@@ -19,6 +19,9 @@
       <el-menu-item index="/adminToRepair">
         <template #title>报修管理</template>
       </el-menu-item>
+       <el-menu-item index="/adminUnreasonable">
+        <template #title>违纪管理</template>
+      </el-menu-item>
       <el-menu-item index="/studentInfo">
         <template #title>学生信息</template>
       </el-menu-item>

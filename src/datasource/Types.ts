@@ -104,3 +104,15 @@ export interface Message {
   date1?: Date;
   dormitoryBuilding?: string;
 }
+
+export interface Unreasonable {
+  id?: number;
+  name?: string;
+  info?: string;
+  number?: string;
+  content?: string;
+  date?: string;
+  date1?: Date;
+  //0为晚归三次以上违纪，1为其他违纪
+  kind?: number;
+}
